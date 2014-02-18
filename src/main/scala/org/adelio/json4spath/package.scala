@@ -9,7 +9,9 @@ import org.json4s.JsonAST.JValue
 package object json4spath {
 
   trait JValueSimpleExtractor[Out] {
-    def simpleExtract(jv: JValue): Option[Out] = Option(jv.values).flatMap(v => if (v == None) None else Some(v)).map(_.asInstanceOf[Out])
+    def translateValue: (JValue#Values) => Out = _.asInstanceOf[Out]
+    def simpleExtract(jv: JValue): Option[Out] =
+      Option(jv.values).flatMap(v => if (v == None) None else Some(v)).map(translateValue)
   }
 
   implicit def stringExtractor  = new JValueSimpleExtractor[String] {}
@@ -17,7 +19,7 @@ package object json4spath {
   implicit def doubleExtractor  = new JValueSimpleExtractor[Double] {}
   implicit def bigdecExtractor  = new JValueSimpleExtractor[BigDecimal] {}
   implicit def intExtractor     = new JValueSimpleExtractor[Int] {
-    override def simpleExtract(jv: JValue) = Option(jv.values).map(_.asInstanceOf[BigInt].toInt)
+    override def translateValue = _.asInstanceOf[BigInt].toInt
   }
 
 }
