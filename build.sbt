@@ -2,7 +2,9 @@ organization := "com.github.migralito"
 
 name := "json4s-path"
 
-publishMavenStyle := true
+profileName := "com.github.migralito" // required by plugin sbt-sonatype
+
+// publishMavenStyle := true // TODO: remove. This is supposed to be needed for release promotion in sonatype. sbt-sonatype would take care of this
 
 publishTo := {
   if (isSnapshot.value)
@@ -18,11 +20,11 @@ libraryDependencies ++= Seq(
 
 releaseSettings
 
-licenses := Seq("Apache License, Version 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
+licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0")) // required for release promotion
 
-homepage := Some(url("https://github.com/migralito/json4s-path"))
+homepage := Some(url("https://github.com/migralito/json4s-path"))  // required for release promotion
 
-pomExtra := (
+pomExtra := ( // required for release promotion
     <scm>
       <url>https://github.com/migralito/json4s-path.git</url>
       <connection>scm:git:https://github.com/migralito/json4s-path.git</connection>
@@ -35,4 +37,11 @@ pomExtra := (
       </developer>
     </developers>)
 
-publish := PgpKeys.publishSigned.value
+publish := { // bind (sbt-pgp) signing and (sbt-sonatype) promotion processes to publish task, so sbt-release can use it
+  if (isSnapshot.value) {
+    PgpKeys.publishSigned.value
+  } else {
+    PgpKeys.publishSigned.value
+    sonatypeRelease.value
+  }
+}
