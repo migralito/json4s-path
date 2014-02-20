@@ -5,9 +5,6 @@ organization := "com.github.migralito"
 
 name := "json4s-path"
 
-// TODO: remove if not needed (not needed if we get a successful release promotion)
-// publishMavenStyle := true
-
 publishTo := {
   if (isSnapshot.value)
     Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
@@ -43,7 +40,10 @@ sonatypeSettings
 
 profileName := "com.github.migralito" // required by plugin sbt-sonatype
 
-publish := {
-  publishSigned.value
-  if (! isSnapshot.value) sonatypeRelease.value
-}
+publish := publishSigned.value
+
+// TODO search how to do this. It didn't work before. Was isSnapshot == true?
+//publish := {
+//  publishSigned.value
+//  if (! isSnapshot.value) sonatypeRelease.value
+//}
