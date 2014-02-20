@@ -34,3 +34,5 @@ pomExtra := (
         <url>https://github.com/migralito</url>
       </developer>
     </developers>)
+
+publish := PgpKeys.publishSigned.value
