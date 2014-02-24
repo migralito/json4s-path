@@ -2,9 +2,10 @@ package org.adelio.json4spath
 
 import java.math.MathContext
 import org.specs2.mutable.Specification
-import org.json4s.jackson.JsonMethods.parse
+import org.json4s.jackson.JsonMethods._
 
 import JsonPath._
+import scala.Some
 
 /**
  * @author adelio
@@ -32,8 +33,29 @@ class JsonPathSpec extends Specification {
                |    }
                |}""".stripMargin
 
-  val ast = parse(json)
-  val astBigDec = parse(json, useBigDecimalForDouble = true)
+  val jsonChanged = """{
+                      |    "buenos_aires": {
+                      |        "null": null,
+                      |        "population": 35,
+                      |        "language": "es",
+                      |        "is_great_city": true,
+                      |        "score": 9.777777777777777777779777777777777777777777977777777777777779,
+                      |        "airports": [
+                      |            {
+                      |                "id": "EZE",
+                      |                "name": "Aeropuerto Internacional Ministro Pistarini"
+                      |            },
+                      |            {
+                      |                "id": "AEP",
+                      |                "name": "No one knows the name of this airport...."
+                      |            }
+                      |        ]
+                      |    }
+                      |}""".stripMargin
+
+  val ast        = parse(json)
+  val astBigDec  = parse(json, useBigDecimalForDouble = true)
+  val astChanged = parse(jsonChanged)
 
   val trimmedScore = 9.777777777777777777779
   val actualScore  = BigDecimal("9.777777777777777777779777777777777777777777977777777777777779", MathContext.UNLIMITED)
@@ -43,7 +65,7 @@ class JsonPathSpec extends Specification {
   // TESTS
   // //////////////////////////////////////////////
 
-  "JsonPath" should {
+  "JsonPath search features" should {
 
     "find simple paths" in {
       val pop       = ast i_\  "buenos_aires.population"
@@ -115,6 +137,15 @@ class JsonPathSpec extends Specification {
 
       eze === "EZE"
       aep === "AEP"
+    }
+  }
+
+  "JsonPath modifying features" should {
+    "allow me to change a value inside a complex object" in {
+      import org.json4s.JsonDSL._
+      val actual = ast < "No one knows the name of this airport...." into "$.buenos_aires.airports[1].name"
+
+      pretty(actual) === pretty(astChanged)
     }
   }
 

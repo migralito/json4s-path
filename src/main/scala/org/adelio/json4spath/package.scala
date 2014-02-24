@@ -1,6 +1,6 @@
 package org.adelio
 
-import org.json4s.JsonAST.JValue
+import org.json4s.JsonAST.{JNothing, JValue}
 
 /**
  * @author adelio
@@ -20,6 +20,10 @@ package object json4spath {
   implicit def bigdecExtractor  = new JValueSimpleExtractor[BigDecimal] {}
   implicit def intExtractor     = new JValueSimpleExtractor[Int] {
     override def translateValue = _.asInstanceOf[BigInt].toInt
+  }
+  implicit def jvalueExtractor  = new JValueSimpleExtractor[JValue] {
+    override def translateValue: (JValue#Values) => JValue = ???
+    override def simpleExtract(jv: JValue): Option[JValue] = if (jv == JNothing) None else Some(jv)
   }
 
 }
