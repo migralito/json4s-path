@@ -17,8 +17,8 @@ publishTo := {
 }
 
 libraryDependencies ++= Seq(
-  "org.json4s"     %%     "json4s-jackson"     %     "3.2.7",
-  "org.specs2"     %%     "specs2"             %     "1.13"  % "test"
+  "org.json4s"     %%     "json4s-jackson"     %     "3.2.10",
+  "org.specs2"     %%     "specs2"             %     "2.4.2"  % "test"
 )
 
 licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0")) // required for release promotion
