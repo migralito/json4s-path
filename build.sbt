@@ -5,6 +5,10 @@ organization := "com.github.migralito"
 
 name := "json4s-path"
 
+scalaVersion  := "2.11.2"
+
+crossScalaVersions := Seq("2.11.2")
+
 publishTo := {
   if (isSnapshot.value)
     Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
